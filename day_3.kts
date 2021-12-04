@@ -5,7 +5,9 @@ val input = File("in/input3.txt").readLines()
 fun day3Sol1() {
     val gama = (0 until input[0].length)
         .map { input.map { l -> l[it] } }
-        .map { l -> if (l.count { it == '1' } > l.count { it == '0' }) '1' else '0' }
+        .map { l ->
+            if (l.count { it == '1' } > l.count { it == '0' }) '1' else '0'
+        }
 
     val epsilon = gama.map { if (it == '0') '1' else '0' }
 
