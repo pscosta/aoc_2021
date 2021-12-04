@@ -12,18 +12,18 @@ fun day4() {
     val drawnNums = mutableListOf<Int>()
 
     run sol1@{
-        allDrawNums.forEach { drawNum ->
-            drawnNums.add(drawNum)
+        allDrawNums.forEach { drawn ->
+            drawnNums.add(drawn)
             boards.firstOrNull { it.isWinner(drawnNums) }?.also {
-                println("sol1: ${it.score(drawNum, drawnNums)}").also { return@sol1 }
+                println("sol1: ${it.score(drawn, drawnNums)}").also { return@sol1 }
             }
         }
     }
     run sol2@{
-        allDrawNums.forEach { drawNum ->
-            drawnNums.add(drawNum)
-            when (boards.size == 1 && boards.first().isWinner(drawnNums)) {
-                true -> println("sol2: ${boards.first().score(drawNum, drawnNums)}").also { return@sol2 }
+        allDrawNums.forEach { drawn ->
+            drawnNums.add(drawn)
+            when (boards.size == 1 && boards[0].isWinner(drawnNums)) {
+                true -> println("sol2: ${boards[0].score(drawn, drawnNums)}").also { return@sol2 }
                 else -> boards = boards.filterNot { it.isWinner(drawnNums) }.toMutableList()
             }
         }
