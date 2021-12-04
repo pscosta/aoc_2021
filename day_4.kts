@@ -2,17 +2,15 @@ import java.io.File
 
 fun day4() {
     val input = File("in/input4.txt").readLines()
-    val allDrawNums = input.first().split(",").map { it.toInt() }
-    var boards = input.drop(2)
-        .filterNot { it.isEmpty() }
+    val drawNums = input.first().split(",").map { it.toInt() }
+    var boards = input.drop(2).filterNot { it.isEmpty() }
         .chunked(5)
         .map { it.map { it.trim().replace("  ", " ").split(" ").map { it.toInt() } } }
-        .toMutableList()
 
     val drawnNums = mutableListOf<Int>()
 
     run sol1@{
-        allDrawNums.forEach { drawn ->
+        drawNums.forEach { drawn ->
             drawnNums.add(drawn)
             boards.firstOrNull { it.isWinner(drawnNums) }?.also {
                 println("sol1: ${it.score(drawn, drawnNums)}").also { return@sol1 }
@@ -20,11 +18,11 @@ fun day4() {
         }
     }
     run sol2@{
-        allDrawNums.forEach { drawn ->
+        drawNums.forEach { drawn ->
             drawnNums.add(drawn)
             when (boards.size == 1 && boards[0].isWinner(drawnNums)) {
                 true -> println("sol2: ${boards[0].score(drawn, drawnNums)}").also { return@sol2 }
-                else -> boards = boards.filterNot { it.isWinner(drawnNums) }.toMutableList()
+                else -> boards = boards.filterNot { it.isWinner(drawnNums) }
             }
         }
     }
