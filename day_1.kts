@@ -10,7 +10,9 @@ fun day1() {
     println("sol1: $acc")
 
     acc = 0
-    input.windowed(3, 1).map { it.sum() }.reduce { acc , a, b -> if (b > a) acc++; b }
+    input.windowed(3, 1)
+        .map { it.sum() }
+        .reduce { a, b -> if (b > a) acc++; b }
     println("sol2: $acc")
 }
 
