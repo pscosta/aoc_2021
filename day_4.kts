@@ -12,7 +12,7 @@ fun day4() {
     run sol1@{
         drawNums.forEach { drawn ->
             drawnNums.add(drawn)
-            boards.firstOrNull { it.isWinner(drawnNums) }?.also {
+            boards.firstOrNull { it.bingo(drawnNums) }?.also {
                 println("sol1: ${it.score(drawn, drawnNums)}").also { return@sol1 }
             }
         }
@@ -20,15 +20,15 @@ fun day4() {
     run sol2@{
         drawNums.forEach { drawn ->
             drawnNums.add(drawn)
-            when (boards.size == 1 && boards[0].isWinner(drawnNums)) {
+            when (boards.size == 1 && boards[0].bingo(drawnNums)) {
                 true -> println("sol2: ${boards[0].score(drawn, drawnNums)}").also { return@sol2 }
-                else -> boards = boards.filterNot { it.isWinner(drawnNums) }
+                else -> boards = boards.filterNot { it.bingo(drawnNums) }
             }
         }
     }
 }
 
 fun List<List<Int>>.transpose() = (0 until this[0].size).map { this.map { l -> l[it] } }
-fun List<List<Int>>.score(winner: Int, drawnNums: List<Int>) = this.sumOf { it.filterNot { drawnNums.contains(it) }.sum() } * winner
-fun List<List<Int>>.isWinner(drawnNums: List<Int>) = this.any { it.won(drawnNums) } || this.transpose().any { it.won(drawnNums) }
-fun List<Int>.won(drawnNums: List<Int>) = drawnNums.containsAll(this)
+fun List<List<Int>>.score(winner: Int, nums: List<Int>) = this.sumOf { it.filterNot { nums.contains(it) }.sum() } * winner
+fun List<List<Int>>.bingo(nums: List<Int>) = this.any { it.marked(nums) } || this.transpose().any { it.marked(nums) }
+fun List<Int>.marked(nums: List<Int>) = nums.containsAll(this)
