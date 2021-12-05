@@ -6,7 +6,7 @@ data class Line(val x1: Int, val y1: Int, val x2: Int, val y2: Int) {
     val yys = setOf(y1, y2).sorted()
 }
 
-val lines = File("/Users/pco38/Library/Application Support/JetBrains/IntelliJIdea2021.2/scratches/2021/in/input5.txt").readLines()
+val lines = File("/in/input5.txt").readLines()
     .mapNotNull { """(\d+),(\d+) -> (\d+),(\d+)""".toRegex().find(it)?.destructured }
     .map { (x1, y1, x2, y2) -> Line(x1.toInt(), y1.toInt(), x2.toInt(), y2.toInt()) }
 
