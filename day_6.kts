@@ -4,7 +4,7 @@ val initialFish = File("/in/input6.txt")
     .readText()
     .split(",").map { it.toInt() }.toMutableList()
 
-fun MutableMap<Int, Long>.incAt(at: Int, amount: Long) = this.set(at, (this[at] ?: 0) + amount)
+fun MutableMap<Int, Long>.incAt(pos: Int, amount: Long) = this.set(pos, (this[pos] ?: 0) + amount)
 
 fun lanternfish(days: Int): Long {
     val newFish = mutableMapOf<Int, Long>()
@@ -22,7 +22,7 @@ fun lanternfish(days: Int): Long {
         allFish[0]?.let { newFish[8] = it }
 
         allFish.clear()
-        newFish.map { allFish.incAt(it.key, it.value) }
+        newFish.forEach { allFish.incAt(it.key, it.value) }
         newFish.clear()
     }
     return allFish.values.sum()
