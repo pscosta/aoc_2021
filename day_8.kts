@@ -1,8 +1,7 @@
 data class Display(val patterns: List<Set<Char>>, val output: List<String>)
 fun regexFor(vararg pos: Set<Char>) = (pos.joinToString("") { "(?=.*$it)" } + ".+").toRegex()
 
-val displays = java.io.File("/in/input8.txt")
-    .readLines()
+val displays = java.io.File("/in/input8.txt").readLines()
     .map { it.split(" | ") }
     .map { Display(it[0].split(" ").map { it.toSet() }, it[1].split(" ")) }
 
@@ -17,7 +16,7 @@ fun sol2(): Int = displays.sumOf { display ->
         2 -> `1` = pattern
     }
 
-    val `length=5` = display.patterns.filter { it.size == 5 }.map { it.toSet() }
+    val `length=5` = display.patterns.filter { it.size == 5 }
     val `2` = `length=5`.first { (it + `4`).size == 7 }
 
     val top = `7` - `1`
