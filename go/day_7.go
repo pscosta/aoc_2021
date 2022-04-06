@@ -34,7 +34,8 @@ func main() {
 	var middle = crabs[len(crabs)/2]
 
 	fmt.Printf("Sol1: %v\n", From(crabs).SumBy(
-		func(it int) int { return int(math.Abs(float64(middle - it))) }))
+		func(it int) int { return int(math.Abs(float64(middle - it))) }),
+	)
 
 	fmt.Printf("Sol2: %v\n", From(crabs).SumBy(
 		func(it int) int {
