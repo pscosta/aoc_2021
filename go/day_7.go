@@ -19,12 +19,10 @@ func readInput() {
 
 	// parse lines
 	for scanner.Scan() {
-		crabs = RangeFrom(
-			Map(From(strings.Split(scanner.Text(), ",")),
-				func(f string) int { fi, _ := strconv.Atoi(f); return fi },
-			).ToSlice()).
-			Sorted().
-			ToSlice()
+		intCrabs := Map(From(strings.Split(scanner.Text(), ",")),
+			func(f string) int { fi, _ := strconv.Atoi(f); return fi },
+		).ToSlice()
+		crabs = RangeFrom(intCrabs).Sorted().ToSlice()
 	}
 }
 
