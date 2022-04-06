@@ -12,7 +12,7 @@ import (
 var initialFish []int
 
 func readInput() {
-	file, _ := os.Open("/Users/pco38/dev/aoc_2021/in/input6.txt")
+	file, _ := os.Open("input6.txt")
 	scanner := bufio.NewScanner(file)
 	defer file.Close()
 
