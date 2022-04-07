@@ -29,27 +29,26 @@ func readInput() {
 }
 
 func sol1(iterations int) int {
-	var workingTemplate = make([]string, len(template))
-	copy(workingTemplate, template)
+	var newTemplate = make([]string, len(template))
+	copy(newTemplate, template)
 
 	for iter := 0; iter < iterations; iter++ {
-		windows := From(workingTemplate).Windowed(2, 1)
+		windows := From(newTemplate).Windowed(2, 1)
 		for i, window := range windows {
 			newChar := rules[window[0]+window[1]]
 			windows[i] = append(window[:1], append([]string{newChar}, window[1:]...)...)
 		}
 
-		workingTemplate = make([]string, 0, len(windows))
+		newTemplate = make([]string, 0, len(windows))
 		for _, window := range windows {
-			workingTemplate = append(workingTemplate, window[0:2]...)
+			newTemplate = append(newTemplate, window[0:2]...)
 		}
-		workingTemplate = append(workingTemplate, windows[len(windows)-1][2])
+		newTemplate = append(newTemplate, windows[len(windows)-1][2])
 	}
 
-	grouping := GroupBy(From(workingTemplate), func(it string) string { return it })
-	min := len(grouping["V"])
+	min := math.MaxInt
 	max := 0
-	for _, v := range grouping {
+	for _, v := range GroupBy(From(newTemplate), func(it string) string { return it }) {
 		if len(v) < min {
 			min = len(v)
 		}
