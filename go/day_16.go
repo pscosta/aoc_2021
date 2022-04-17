@@ -67,7 +67,7 @@ func parseLengthOperator(pc *int, bin []string) packet {
 	subPacketLen := parseInt(15, pc, bin)
 	initPc := *pc // store initial pc
 
-	for (*pc)-initPc < subPacketLen {
+	for *pc-initPc < subPacketLen {
 		subPackets = append(subPackets, parsePacket(pc, bin))
 	}
 	return packet{subPackets: subPackets}
