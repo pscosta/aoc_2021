@@ -65,11 +65,10 @@ func parseCountOperator(pc *int, bin []string) packet {
 func parseLengthOperator(pc *int, bin []string) packet {
 	var subPackets []packet
 	subPacketLen := parseInt(15, pc, bin)
-	initPc := *pc
+	initPc := *pc // store initial pc
 
 	for (*pc)-initPc < subPacketLen {
-		packet := parsePacket(pc, bin)
-		subPackets = append(subPackets, packet)
+		subPackets = append(subPackets, parsePacket(pc, bin))
 	}
 	return packet{subPackets: subPackets}
 }
