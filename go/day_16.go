@@ -89,8 +89,8 @@ func parseInt(len int, pc *int, bin []string) int {
 	return int(res)
 }
 
-func hexToBits(val string) (bits []string) {
-	bit, _ := s.ParseUint(val, 16, 32)
+func hexToBits(hex string) (bits []string) {
+	bit, _ := s.ParseUint(hex, 16, 32)
 	for i := 0; i < 4; i++ {
 		bits = append([]string{s.FormatUint(bit&0x1, 2)}, bits...)
 		bit = bit >> 1
