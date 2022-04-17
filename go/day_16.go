@@ -3,7 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"math"
+	. "github.com/pscosta/go-strm/strm"
 	"os"
 	s "strconv"
 	str "strings"
@@ -16,27 +16,24 @@ type packet struct {
 	subPackets []packet
 }
 
-var packets []packet
+var bin []string // binary slice
+var pc int       // program counter
 
-func readInput() {
-	var bin []string // binary slice
-	pc := 0          // program counter
+func readInput() packet {
 	file, _ := os.Open("input16.txt")
-	scanner := bufio.NewScanner(file)
 	defer file.Close()
+	scanner := bufio.NewScanner(file)
 
 	for scanner.Scan() {
 		for _, hex := range str.Split(scanner.Text(), "") {
 			bin = append(bin, hexToBits(hex)...)
 		}
 	}
-	for pc < len(bin) {
-		packets = append(packets, parsePacket(&pc, bin))
-	}
+	// parses the outermost packet
+	return parsePacket(&pc, bin)
 }
 
-func parsePacket(pc *int, bin []string) packet {
-	var pkt packet
+func parsePacket(pc *int, bin []string) (pkt packet) {
 	version := parseInt(3, pc, bin)
 	typeId := parseInt(3, pc, bin)
 
@@ -79,29 +76,26 @@ func parseLengthOperator(pc *int, bin []string) packet {
 
 func parseLiteral(pc *int, bin []string) packet {
 	var data []string
-	prefix := -1
-
-	for ; prefix != 0; *pc += 4 {
+	for prefix := -1; prefix != 0; *pc += 4 {
 		prefix = parseInt(1, pc, bin)
-		data = append(data, bin[(*pc):(*pc)+4]...)
+		data = append(data, bin[*pc:*pc+4]...)
 	}
 	return packet{data: parseInt(len(data), new(int), data)}
 }
 
 func parseInt(len int, pc *int, bin []string) int {
-	res, _ := s.ParseInt(str.Join(bin[(*pc):(*pc)+len], ""), 2, 64)
-	*pc += len
+	res, _ := s.ParseInt(str.Join(bin[*pc:*pc+len], ""), 2, 64)
+	*pc += len // inc program counter with the read length
 	return int(res)
 }
 
-func hexToBits(val string) []string {
-	var bits []string
+func hexToBits(val string) (bits []string) {
 	bit, _ := s.ParseUint(val, 16, 32)
 	for i := 0; i < 4; i++ {
 		bits = append([]string{s.FormatUint(bit&0x1, 2)}, bits...)
 		bit = bit >> 1
 	}
-	return bits
+	return
 }
 
 func sumVersions(pkt packet) (acc int) {
@@ -118,57 +112,34 @@ func sumVersions(pkt packet) (acc int) {
 func eval(pkt packet) int {
 	switch pkt.typeId {
 	case 0:
-		sum := 0
-		for _, sp := range pkt.subPackets {
-			sum += eval(sp)
-		}
-		return sum
+		return From(pkt.subPackets).SumBy(eval)
 	case 1:
-		prod := 1
-		for _, sp := range pkt.subPackets {
-			prod *= eval(sp)
-		}
-		return prod
+		return Reduce(From(pkt.subPackets), func(acc int, p packet) int { return acc * eval(p) }, 1)
 	case 2:
-		min := math.MaxInt
-		for _, sp := range pkt.subPackets {
-			if it := eval(sp); it < min {
-				min = it
-			}
-		}
-		return min
+		return Min(Map(From(pkt.subPackets), eval))
 	case 3:
-		max := 0
-		for _, sp := range pkt.subPackets {
-			if it := eval(sp); it > max {
-				max = it
-			}
-		}
-		return max
+		return Max(Map(From(pkt.subPackets), eval))
 	case 4:
 		return pkt.data
 	case 5:
-		if eval(pkt.subPackets[0]) > eval(pkt.subPackets[1]) {
-			return 1
-		}
-		return 0
+		return toInt(eval(pkt.subPackets[0]) > eval(pkt.subPackets[1]))
 	case 6:
-		if eval(pkt.subPackets[0]) < eval(pkt.subPackets[1]) {
-			return 1
-		}
-		return 0
+		return toInt(eval(pkt.subPackets[0]) < eval(pkt.subPackets[1]))
 	case 7:
-		if eval(pkt.subPackets[0]) == eval(pkt.subPackets[1]) {
-			return 1
-		}
-		return 0
-	default:
-		return -1
+		return toInt(eval(pkt.subPackets[0]) == eval(pkt.subPackets[1]))
 	}
+	return -1
+}
+
+func toInt(pred bool) int {
+	if pred {
+		return 1
+	}
+	return 0
 }
 
 func main() {
-	readInput()
-	fmt.Printf("Sol1: %v\n", sumVersions(packets[0]))
-	fmt.Printf("Sol2: %v\n", eval(packets[0]))
+	outerPacket := readInput()
+	fmt.Printf("Sol1: %v\n", sumVersions(outerPacket))
+	fmt.Printf("Sol2: %v\n", eval(outerPacket))
 }
