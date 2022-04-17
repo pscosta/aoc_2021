@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 	"strconv"
-	"strings"
+	s "strings"
 )
 
 var drawNumbers []int
@@ -18,12 +18,12 @@ func readInput() {
 
 	// parse draw numbers
 	scanner.Scan()
-	drawNumbers = toInts(strings.Split(scanner.Text(), ","))
+	drawNumbers = toInts(s.Split(scanner.Text(), ","))
 
 	// parse remaining file
 	var board [][]int
 	for scanner.Scan() {
-		row := toInts(strings.Split(strings.TrimSpace(strings.ReplaceAll(scanner.Text(), "  ", " ")), " "))
+		row := toInts(s.Split(s.TrimSpace(s.ReplaceAll(scanner.Text(), "  ", " ")), " "))
 		if len(row) > 1 {
 			board = append(board, row)
 		}

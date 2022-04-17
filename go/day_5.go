@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 	"strconv"
-	"strings"
+	s "strings"
 )
 
 type Line struct {
@@ -22,7 +22,7 @@ func readInput() {
 
 	// parse lines
 	for scanner.Scan() {
-		coords := toInts(strings.Split(strings.ReplaceAll(scanner.Text(), " ", ""), "->"))
+		coords := toInts(s.Split(s.ReplaceAll(scanner.Text(), " ", ""), "->"))
 		lines = append(lines, Line{x1: coords[0], y1: coords[1], x2: coords[2], y2: coords[3]})
 	}
 }
@@ -115,7 +115,7 @@ func minOf(nums ...int) (min int) {
 
 func toInts(pairs []string) (res []int) {
 	for _, pair := range pairs {
-		for _, token := range strings.Split(pair, ",") {
+		for _, token := range s.Split(pair, ",") {
 			number, _ := strconv.Atoi(token)
 			res = append(res, number)
 		}
